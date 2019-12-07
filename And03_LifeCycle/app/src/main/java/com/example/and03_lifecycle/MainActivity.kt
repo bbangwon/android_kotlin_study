@@ -3,6 +3,7 @@ package com.example.and03_lifecycle
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import kotlinx.android.synthetic.main.activity_main.*
 
 const val TAG = "edu.android.and03"
 class MainActivity : AppCompatActivity() {
@@ -18,6 +19,11 @@ class MainActivity : AppCompatActivity() {
         Log.i(TAG, "onCreate() 호출")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        button.setOnClickListener {
+            val msg = editText.text.toString()
+            textView.text = msg
+        }
     }
 
     // onStart() : onCreate() 이후에 호출되는 생명 주기 메소드
@@ -67,4 +73,28 @@ class MainActivity : AppCompatActivity() {
         super.onRestart()
         Log.i(TAG, "onRestart() 호출")
     }
+
+    // onSaveInstanceState() :
+    // 앱이 (stop/destroy된 후) 다시 시작할 때 필요한
+    // 데이터를 저장할 때 사용하는 메소드
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        // Bundle 객체에 데이터를 key value 쌍으로 저장
+        val msg = textView.text.toString()
+        outState?.putString("MSG", msg)
+        Log.i(TAG, "상태 저장됨")
+    }
+
+    //onRestoreInstanceState() :
+    //요청한 데이터를 복원하는 시점에 호출되는 메소드
+    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+        super.onRestoreInstanceState(savedInstanceState)
+        // Bundle 객체에서 key값을 사용해서 데이터 추출 -> 복원
+        val msg = savedInstanceState?.getString("MSG")
+        textView.text = msg
+        Log.i(TAG, "데이터 복원됨")
+
+    }
+
+
 }
